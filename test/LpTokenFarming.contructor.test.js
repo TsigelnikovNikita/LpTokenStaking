@@ -28,19 +28,13 @@ describe("LpTokenFarming.constructor", () => {
   it("Must throw an expection if address of lpToken is equal to zero", async () => {
     await expect(LpTokenFarmingFactory.deploy(ethers.constants.AddressZero, rewardToken.address, farmingEpoch,
                                                                                     rewardPerFarmingEpoch, lockEpoch))
-      .to.be.rejected
-      .then((error) => {
-        expect(error.reason).to.be.contain("LpTokenFarming: address of lpToken is equal to zero");
-      });
+      .to.be.rejectedWith("LpTokenFarming: address of lpToken is equal to zero");
   });
 
   it("Must throw an expection if address of rewardToken is equal to zero", async () => {
     await expect(LpTokenFarmingFactory.deploy(lpToken.address, ethers.constants.AddressZero, farmingEpoch,
                                                                                     rewardPerFarmingEpoch, lockEpoch))
-      .to.be.rejected
-      .then((error) => {
-        expect(error.reason).to.be.contain("LpTokenFarming: address of rewardToken is equal to zero");
-      });
+      .to.be.rejectedWith("LpTokenFarming: address of rewardToken is equal to zero");
   });
 
   it("Must throw an expection if address of rewardToken is equal to zero", async () => {

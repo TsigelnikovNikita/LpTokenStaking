@@ -50,6 +50,10 @@ contract LpTokenFarming is Ownable {
         farmingEpoch = newFarmingEpoch;
     }
 
+    function setLockEpoch(uint newLockEpoch) external onlyOwner {
+        lockEpoch = newLockEpoch;
+    }
+
     function setRewardPerFarmingEpoch(uint newRewardPerFarmingEpoch) external onlyOwner {
         rewardPerFarmingEpoch = newRewardPerFarmingEpoch;
     }
