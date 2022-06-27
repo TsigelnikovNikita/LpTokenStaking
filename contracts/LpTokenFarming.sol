@@ -36,8 +36,8 @@ contract LpTokenFarming is Ownable {
                 uint _farmingEpoch,
                 uint _rewardPerFarmingEpoch,
                 uint _lockEpoch) {
-        require(lpTokenAddress != address(0x0), "LpTokenFarming: address of lpToken can't be equal to zero");
-        require(rewardTokenAddress != address(0x0), "LpTokenFarming: address of rewardToken can't be equal to zero");
+        require(lpTokenAddress != address(0x0), "LpTokenFarming: address of lpToken is equal to zero");
+        require(rewardTokenAddress != address(0x0), "LpTokenFarming: address of rewardToken is equal to zero");
         lpToken = IERC20(lpTokenAddress);
         rewardToken = IERC20(rewardTokenAddress);
 
