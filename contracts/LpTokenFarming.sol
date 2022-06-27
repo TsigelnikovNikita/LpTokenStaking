@@ -11,26 +11,50 @@ contract LpTokenFarming is Ownable {
     IERC20 immutable public lpToken;
     IERC20 immutable public rewardToken;
 
+    /**
+     * In seconds
+     */
     uint public farmingEpoch;
-    uint public rewardPerEpoch;
+    /**
+     *  In percent. If rewardPerFarmingEpoch is equal to 5 it means 5% from amount of staking tokens
+     */
+    uint public rewardPerFarmingEpoch;
+    /**
+     * In seconds
+     */
+    uint public lockEpoch;
 
-    constructor(address lpTokenAddress, address rewardTokenAddress) {
+    struct Staking {
+        uint stakingTokensAmount;
+        uint lastGetRewardTime;
+    }
+
+    mapping (address => Staking) stakers;
+
+    constructor(address lpTokenAddress,
+                address rewardTokenAddress,
+                uint _farmingEpoch,
+                uint _rewardPerFarmingEpoch,
+                uint _lockEpoch) {
         require(lpTokenAddress != address(0x0), "LpTokenFarming: address of lpToken can't be equal to zero");
         require(rewardTokenAddress != address(0x0), "LpTokenFarming: address of rewardToken can't be equal to zero");
         lpToken = IERC20(lpTokenAddress);
         rewardToken = IERC20(rewardTokenAddress);
+
+        farmingEpoch = _farmingEpoch;
+        rewardPerFarmingEpoch = _rewardPerFarmingEpoch;
+        lockEpoch = _lockEpoch;
     }
 
     function setFarmingEpoch(uint newFarmingEpoch) external onlyOwner {
         farmingEpoch = newFarmingEpoch;
     }
 
-    function setRewardPerEpoch(uint newRewardPerEpoch) external onlyOwner {
-        rewardPerEpoch = newRewardPerEpoch;
+    function setRewardPerFarmingEpoch(uint newRewardPerFarmingEpoch) external onlyOwner {
+        rewardPerFarmingEpoch = newRewardPerFarmingEpoch;
     }
 
     function stake(uint amount) external {
-
     }
 
     function claim() external {
@@ -38,6 +62,6 @@ contract LpTokenFarming is Ownable {
     }
 
     function unstake() external {
-        
+
     }
 }
