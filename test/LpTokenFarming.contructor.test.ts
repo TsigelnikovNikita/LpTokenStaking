@@ -1,13 +1,14 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import { ethers } from "hardhat";
+import { Contract, ContractFactory } from "ethers";
 
 // used for rejectedWith. More details here https://www.chaijs.com/plugins/chai-as-promised/
 require("chai").use(require('chai-as-promised'));
 
 describe("LpTokenFarming.constructor", () => {
-  let lpToken;
-  let rewardToken;
-  let LpTokenFarmingFactory;
+  let lpToken : Contract;
+  let rewardToken : Contract;
+  let LpTokenFarmingFactory : ContractFactory;
 
   let farmingEpoch = 10;
   let rewardPerFarmingEpoch = 10;
@@ -28,13 +29,13 @@ describe("LpTokenFarming.constructor", () => {
   it("Must throw an expection if address of lpToken is equal to zero", async () => {
     await expect(LpTokenFarmingFactory.deploy(ethers.constants.AddressZero, rewardToken.address, farmingEpoch,
                                                                                     rewardPerFarmingEpoch, lockEpoch))
-      .to.be.rejectedWith("LpTokenFarming: address of lpToken is equal to zero");
+      .to.be.revertedWith("LpTokenFarming: address of lpToken is equal to zero");
   });
 
   it("Must throw an expection if address of rewardToken is equal to zero", async () => {
     await expect(LpTokenFarmingFactory.deploy(lpToken.address, ethers.constants.AddressZero, farmingEpoch,
                                                                                     rewardPerFarmingEpoch, lockEpoch))
-      .to.be.rejectedWith("LpTokenFarming: address of rewardToken is equal to zero");
+      .to.be.revertedWith("LpTokenFarming: address of rewardToken is equal to zero");
   });
 
   it("Must throw an expection if address of rewardToken is equal to zero", async () => {

@@ -1,10 +1,11 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import { ethers } from "hardhat";
+import { Contract, Signer } from "ethers";
 
 describe("LpTokenFarming.setFarmingEpoch", () => {
-  let lpTokenFarming;
-  let user;
-  let lpTokenFarmingOwner;
+  let lpTokenFarming : Contract;
+  let user : Signer;
+  let lpTokenFarmingOwner : Signer;
 
   let farmingEpoch = 10;
   let rewardPerFarmingEpoch = 10;
@@ -42,9 +43,9 @@ describe("LpTokenFarming.setFarmingEpoch", () => {
 });
 
 describe("LpTokenFarming.setLockEpoch", () => {
-  let lpTokenFarming;
-  let user;
-  let lpTokenFarmingOwner;
+  let lpTokenFarming : Contract;
+  let user : Signer;
+  let lpTokenFarmingOwner : Signer;
 
   let farmingEpoch = 10;
   let rewardPerFarmingEpoch = 10;
@@ -82,9 +83,9 @@ describe("LpTokenFarming.setLockEpoch", () => {
 });
 
 describe("LpTokenFarming.setRewardPerFarmingEpoch", () => {
-  let lpTokenFarming;
-  let user;
-  let lpTokenFarmingOwner;
+  let lpTokenFarming : Contract;
+  let user : Signer;
+  let lpTokenFarmingOwner : Signer;
 
   let farmingEpoch = 10;
   let rewardPerFarmingEpoch = 10;

@@ -1,4 +1,4 @@
-const hre = require("hardhat");
+import hre from "hardhat";
 
 // Change name of contract here
 const CONTRACT_NAME="CONTRACT_NAME";

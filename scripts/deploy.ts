@@ -1,10 +1,9 @@
-const hre = require("hardhat");
+import { ethers } from "hardhat";
 
 const CONTRACT_NAME="CONTRACT_NAME";
 
 async function main() {
-    const contractFactory = await hre.ethers.getContractFactory(CONTRACT_NAME);
-    await hre.storageLayout.export();
+    const contractFactory = await ethers.getContractFactory(CONTRACT_NAME);
 
     const contract = await contractFactory.deploy();
     await contract.deployed();
