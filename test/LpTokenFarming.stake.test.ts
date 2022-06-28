@@ -54,10 +54,10 @@ describe("LpTokenFarming.stake", () => {
 
     const staking = await lpTokenFarming.stakers(await user.getAddress());
 
-    const lastBlockTimestamp = (await ethers.provider.getBlock("latest")).timestamp;
+    const lastBlockNumber = (await ethers.provider.getBlock("latest")).number;
     expect(staking.stakingTokensAmount).to.eq(1000);
-    expect(staking.lastGetRewardTime).to.eq(lastBlockTimestamp);
-    expect(staking.stakingTime).to.eq(lastBlockTimestamp);
+    expect(staking.lastGetRewardTime).to.eq(lastBlockNumber);
+    expect(staking.stakingTime).to.eq(lastBlockNumber);
   });
 
   it("Must add amount to the stake and reset stakingTime and lastGetRewardTime", async () => {

@@ -47,21 +47,21 @@ describe("LpTokenFarming.claim", () => {
 
   it("Must throw an expection if lpTokenFarming doesn't have enough liquidity for reward payment", async () => {
     await rewardToken.connect(lpTokenFarmingOwner).burn(lpTokenFarming.address, 10000000000);
-    await testUtils.setNextBlockTimestamp(farmingEpoch + 1);
+    await testUtils.mineBlocks(farmingEpoch + 1);
 
     await expect(lpTokenFarming.connect(user).claim())
       .to.revertedWith("LpTokenFarming: not enough liquidity for reward payment");
   });
 
   it("Must claim reward correctly", async () => {
-    await testUtils.setNextBlockTimestamp(farmingEpoch + 1);
+    await testUtils.mineBlocks(farmingEpoch + 1);
 
     await expect(() => lpTokenFarming.connect(user).claim())
       .to.changeTokenBalances(rewardToken, [user, lpTokenFarming], [100, -100]);
   });
 
   it("Must claim reward for three epoch correctly", async () => {
-    await testUtils.setNextBlockTimestamp((farmingEpoch + 1) * 3);
+    await testUtils.mineBlocks((farmingEpoch + 1) * 3);
 
     await expect(() => lpTokenFarming.connect(user).claim())
       .to.changeTokenBalances(rewardToken, [user, lpTokenFarming], [300, -300]);
@@ -71,28 +71,28 @@ describe("LpTokenFarming.claim", () => {
     lpTokenFarming.connect(lpTokenFarmingOwner).setRewardPerFarmingEpoch(38);
     await lpTokenFarming.connect(user).stake(1234);
 
-    await testUtils.setNextBlockTimestamp(farmingEpoch + 1);
+    await testUtils.mineBlocks(farmingEpoch + 1);
 
     await expect(() => lpTokenFarming.connect(user).claim())
       .to.changeTokenBalances(rewardToken, [user, lpTokenFarming], [848, -848]);
   });
 
-  it("Must emit a Staked event", async () => {    
-    await testUtils.setNextBlockTimestamp(farmingEpoch + 1);
+  it("Must emit a Staked event", async () => {
+    await testUtils.mineBlocks(farmingEpoch + 1);
 
     await expect(lpTokenFarming.connect(user).claim())
       .to.emit(lpTokenFarming, "Claimed")
       .withArgs(await user.getAddress(), 100);
   });
 
-  it("Must update staker's staking info", async () => {    
-    await testUtils.setNextBlockTimestamp(farmingEpoch + 1);
+  it("Must update staker's staking info", async () => {
+    await testUtils.mineBlocks(farmingEpoch + 1);
 
     await lpTokenFarming.connect(user).claim();
 
-    const lastBlockTimestamp = (await ethers.provider.getBlock("latest")).timestamp;
+    const lastBlockNumber = (await ethers.provider.getBlock("latest")).number;
     const staking = await lpTokenFarming.stakers(await user.getAddress());
 
-    expect(staking.lastGetRewardTime).to.eq(lastBlockTimestamp);
+    expect(staking.lastGetRewardTime).to.eq(lastBlockNumber);
   });
 });

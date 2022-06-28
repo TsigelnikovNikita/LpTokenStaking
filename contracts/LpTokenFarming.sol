@@ -12,7 +12,7 @@ contract LpTokenFarming is Ownable {
     IERC20 immutable public rewardToken;
 
     /**
-     * Amount of the seconds in one farming epoch
+     * Amount of the blocks in one farming epoch. Suppose that one block is generated every 15 seconds
      */
     uint public farmingEpoch;
     /**
@@ -20,7 +20,8 @@ contract LpTokenFarming is Ownable {
      */
     uint public rewardPerFarmingEpoch;
     /**
-     * The time in the seconds for wich staked tokens will be locked
+     * The time in the blocks for wich staked tokens will be locked. Suppose that one block is generated every 15
+     * seconds
      */
     uint public lockEpoch;
 
@@ -108,8 +109,8 @@ contract LpTokenFarming is Ownable {
         Staking storage staking = stakers[msg.sender];
 
         staking.stakingTokensAmount += amount;
-        staking.lastGetRewardTime = block.timestamp;
-        staking.stakingTime = block.timestamp;
+        staking.lastGetRewardTime = block.number;
+        staking.stakingTime = block.number;
 
         emit Staked(msg.sender, amount);
     }
@@ -123,7 +124,7 @@ contract LpTokenFarming is Ownable {
     function claim() external {
         Staking storage staking = stakers[msg.sender];
 
-        uint stakingTime = block.timestamp - staking.lastGetRewardTime;
+        uint stakingTime = block.number - staking.lastGetRewardTime;
         require(stakingTime > farmingEpoch, "LpTokenFarming: caller can't claim reward yet");
         uint amountOfFarmingEpoch = stakingTime / farmingEpoch;
 
@@ -133,7 +134,7 @@ contract LpTokenFarming is Ownable {
         require(rewardToken.balanceOf(address(this)) >= totalClaim,
                                                             "LpTokenFarming: not enough liquidity for reward payment");
 
-        staking.lastGetRewardTime = block.timestamp;
+        staking.lastGetRewardTime = block.number;
         rewardToken.transfer(msg.sender, totalClaim);
 
         emit Claimed(msg.sender, totalClaim);
