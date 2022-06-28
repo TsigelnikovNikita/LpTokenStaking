@@ -127,10 +127,10 @@ contract LpTokenFarming is Ownable {
         require(stakingTime > farmingEpoch, "LpTokenFarming: caller can't claim reward yet");
         uint amountOfFarmingEpoch = stakingTime / farmingEpoch;
 
-        uint claimPerEpoch = (staking.stakingTokensAmount * (100 + rewardPerFarmingEpoch)) / 100;
+        uint claimPerEpoch = (rewardPerFarmingEpoch * staking.stakingTokensAmount) / 100;
         uint totalClaim = claimPerEpoch * amountOfFarmingEpoch;
 
-        require(rewardToken.balanceOf(address(this)) < totalClaim,
+        require(rewardToken.balanceOf(address(this)) >= totalClaim,
                                                             "LpTokenFarming: not enough liquidity for reward payment");
 
         staking.lastGetRewardTime = block.timestamp;

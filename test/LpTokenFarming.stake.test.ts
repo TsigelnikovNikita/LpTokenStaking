@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { Contract, Signer } from "ethers";
 
 
-describe("LpTokenFarming.setFarmingEpoch", () => {
+describe("LpTokenFarming.stake", () => {
   let lpTokenFarming : Contract;
   let lpToken : Contract;
 
