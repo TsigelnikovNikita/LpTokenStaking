@@ -30,7 +30,7 @@ contract LpTokenFarming is Ownable {
         uint stakingTime;
     }
 
-    mapping (address => Staking) stakers;
+    mapping (address => Staking) public stakers;
 
     constructor(address lpTokenAddress,
                 address rewardTokenAddress,
@@ -92,6 +92,9 @@ contract LpTokenFarming is Ownable {
      * emit {Staked} event
      */
     function stake(uint amount) external {
+        require(lpToken.allowance(msg.sender, address(this)) >= amount,
+                                                                "LpTokenFarming: caller didn't allow amount of tokens");
+        require(lpToken.balanceOf(msg.sender) >= amount, "LpTokenFarming: caller doesn't have such amount of tokens");
         lpToken.transferFrom(msg.sender, address(this), amount);
 
         Staking storage staking = stakers[msg.sender];
