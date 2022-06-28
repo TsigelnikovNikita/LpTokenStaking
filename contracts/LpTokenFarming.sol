@@ -12,15 +12,15 @@ contract LpTokenFarming is Ownable {
     IERC20 immutable public rewardToken;
 
     /**
-     * In seconds
+     * Amount of the seconds in one farming epoch
      */
     uint public farmingEpoch;
     /**
-     *  In percent. If rewardPerFarmingEpoch is equal to 5 it means 5% from amount of staking tokens
+     * Amount of percent from user's stake wich they get for every farmingEpoch time 
      */
     uint public rewardPerFarmingEpoch;
     /**
-     * In seconds
+     * The time in the seconds for wich staked tokens will be locked
      */
     uint public lockEpoch;
 
@@ -47,18 +47,50 @@ contract LpTokenFarming is Ownable {
         lockEpoch = _lockEpoch;
     }
 
+    /**
+     * MODIFIERS
+     */
+    event Staked(address indexed user, uint amount);
+
+    /**
+     * FUNCTIONS
+     */
+
+    /**
+     * @dev Allows to change epoch of farming. This function can call only Owner of contract.
+     *
+     * @param newFarmingEpoch new value for `farmingEpoch` 
+     */
     function setFarmingEpoch(uint newFarmingEpoch) external onlyOwner {
         farmingEpoch = newFarmingEpoch;
     }
 
+    /**
+     * @dev Allows to change epoch of locking of stake. This function can call only Owner of contract.
+     *
+     * @param newLockEpoch new value for `lockEpoch` 
+     */
     function setLockEpoch(uint newLockEpoch) external onlyOwner {
         lockEpoch = newLockEpoch;
     }
 
+    /**
+     * @dev Allows to change reward for stake per farming epoch. This function can call only Owner of contract.
+     *
+     * @param newRewardPerFarmingEpoch new value for `rewardPerFarmingEpoch` 
+     */
     function setRewardPerFarmingEpoch(uint newRewardPerFarmingEpoch) external onlyOwner {
         rewardPerFarmingEpoch = newRewardPerFarmingEpoch;
     }
 
+    /**
+     * @dev Allows to stake `amount` of tokens. Before calling this function user must to call approve function from
+     * `lpToken` address. This function resets `lastGetRewardTime` and `statingTime` of staker.
+     *
+     * @param amount amount of staking tokens
+     *
+     * emit {Staked} event
+     */
     function stake(uint amount) external {
         lpToken.transferFrom(msg.sender, address(this), amount);
 
@@ -67,6 +99,8 @@ contract LpTokenFarming is Ownable {
         staking.stakingTokensAmount += amount;
         staking.lastGetRewardTime = block.timestamp;
         staking.stakingTime = block.timestamp;
+
+        emit Staked(msg.sender, amount);
     }
 
     function claim() external {
