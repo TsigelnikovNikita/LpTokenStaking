@@ -27,6 +27,7 @@ contract LpTokenFarming is Ownable {
     struct Staking {
         uint stakingTokensAmount;
         uint lastGetRewardTime;
+        uint stakingTime;
     }
 
     mapping (address => Staking) stakers;
@@ -59,6 +60,13 @@ contract LpTokenFarming is Ownable {
     }
 
     function stake(uint amount) external {
+        lpToken.transferFrom(msg.sender, address(this), amount);
+
+        Staking storage staking = stakers[msg.sender];
+
+        staking.stakingTokensAmount += amount;
+        staking.lastGetRewardTime = block.timestamp;
+        staking.stakingTime = block.timestamp;
     }
 
     function claim() external {
