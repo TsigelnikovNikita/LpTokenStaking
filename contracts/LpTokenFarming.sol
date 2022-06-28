@@ -50,7 +50,15 @@ contract LpTokenFarming is Ownable {
     /**
      * MODIFIERS
      */
+
+    /**
+     * @dev emitted from {stake} function
+     */
     event Staked(address indexed user, uint amount);
+    /**
+     * @dev emitted from {claim} function
+     */
+    event Claimed(address indexed user, uint amount);
 
     /**
      * FUNCTIONS
@@ -106,8 +114,29 @@ contract LpTokenFarming is Ownable {
         emit Staked(msg.sender, amount);
     }
 
+    /**
+     * @dev Allows to claim reward for farming of lpTokens. Function will throw an exception if contract doesn't have
+     * enough liquidity for reward payment. If everything is okay, contract will transfer user's reward to the user.
+     *
+     * emit {Claimed} event
+     */
     function claim() external {
+        Staking storage staking = stakers[msg.sender];
 
+        uint stakingTime = block.timestamp - staking.lastGetRewardTime;
+        require(stakingTime > farmingEpoch, "LpTokenFarming: caller can't claim reward yet");
+        uint amountOfFarmingEpoch = stakingTime / farmingEpoch;
+
+        uint claimPerEpoch = (staking.stakingTokensAmount * (100 + rewardPerFarmingEpoch)) / 100;
+        uint totalClaim = claimPerEpoch * amountOfFarmingEpoch;
+
+        require(rewardToken.balanceOf(address(this)) < totalClaim,
+                                                            "LpTokenFarming: not enough liquidity for reward payment");
+
+        staking.lastGetRewardTime = block.timestamp;
+        rewardToken.transfer(msg.sender, totalClaim);
+
+        emit Claimed(msg.sender, totalClaim);
     }
 
     function unstake() external {
