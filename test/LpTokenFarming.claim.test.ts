@@ -77,7 +77,7 @@ describe("LpTokenFarming.claim", () => {
       .to.changeTokenBalances(rewardToken, [user, lpTokenFarming], [848, -848]);
   });
 
-  it("Must emit a Staked event", async () => {
+  it("Must emit a Claimed event", async () => {
     await testUtils.mineBlocks(farmingEpoch + 1);
 
     await expect(lpTokenFarming.connect(user).claim())

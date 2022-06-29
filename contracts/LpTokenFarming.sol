@@ -153,7 +153,8 @@ contract LpTokenFarming is Ownable {
     function unstake() external {
         Staking storage staking = stakers[msg.sender];
 
-        require(block.number - staking.stakingTime >= lockEpoch, "LpTokenFarming: caller can't unstake tokens yet");
+        require(staking.stakingTokensAmount > 0, "LpTokenFarming: caller doesn't have staking");
+        require(block.number - staking.stakingTime > lockEpoch, "LpTokenFarming: caller can't unstake tokens yet");
 
         uint stakingTokensAmount = staking.stakingTokensAmount;
         delete stakers[msg.sender];
