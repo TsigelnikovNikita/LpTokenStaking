@@ -39,6 +39,11 @@ describe("LpTokenFarming.stake", () => {
       .to.revertedWith("LpTokenFarming: caller didn't allow amount of tokens");
   });
 
+  it("Must throw an expection if amount is equal to zero", async () => {
+    await expect(lpTokenFarming.connect(user).stake(0))
+      .to.revertedWith("LpTokenFarming: amount must be greater than zero");
+  });
+
   it("Must throw an expection if user doesn't have such amount of tokens", async () => {
     await lpToken.connect(lpTokenOwner).burn(await user.getAddress(), 1000);
     await lpToken.connect(user).approve(lpTokenFarming.address, 1000);

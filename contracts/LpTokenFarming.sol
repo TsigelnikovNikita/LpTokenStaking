@@ -105,6 +105,7 @@ contract LpTokenFarming is Ownable {
      * emit {Staked} event
      */
     function stake(uint amount) external {
+        require(amount > 0, "LpTokenFarming: amount must be greater than zero");
         require(lpToken.allowance(msg.sender, address(this)) >= amount,
                                                                 "LpTokenFarming: caller didn't allow amount of tokens");
         require(lpToken.balanceOf(msg.sender) >= amount, "LpTokenFarming: caller doesn't have such amount of tokens");
