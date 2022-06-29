@@ -60,6 +60,10 @@ contract LpTokenFarming is Ownable {
      * @dev emitted from {claim} function
      */
     event Claimed(address indexed user, uint amount);
+    /**
+     * @dev emitted from {unstake} function
+     */
+    event Unstaked(address indexed user, uint amount);
 
     /**
      * FUNCTIONS
@@ -140,7 +144,21 @@ contract LpTokenFarming is Ownable {
         emit Claimed(msg.sender, totalClaim);
     }
 
+    /**
+     * @dev Allows to unstake all {lpToken} amount from the LpTokenFarming contract. Be careful, unstake function
+     * doesn't call {claim} function! This means that you need to call {claim} before {unstake} yourself.
+     *
+     * emit {Unstaked} event
+     */
     function unstake() external {
+        Staking storage staking = stakers[msg.sender];
 
+        require(block.number - staking.stakingTime >= lockEpoch, "LpTokenFarming: caller can't unstake tokens yet");
+
+        uint stakingTokensAmount = staking.stakingTokensAmount;
+        delete stakers[msg.sender];
+        lpToken.transfer(msg.sender, stakingTokensAmount);
+
+        emit Unstaked(msg.sender, stakingTokensAmount);
     }
 }
