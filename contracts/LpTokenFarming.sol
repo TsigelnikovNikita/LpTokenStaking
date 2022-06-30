@@ -126,6 +126,7 @@ contract LpTokenFarming is Ownable {
     function claim() external {
         Staking storage staking = stakers[msg.sender];
 
+        require(staking.stakingTokensAmount > 0, "LpTokenFarming: caller doesn't have staking");
         uint stakingTime = block.number - staking.lastGetRewardTime;
         require(stakingTime > farmingEpoch, "LpTokenFarming: caller can't claim reward yet");
         uint amountOfFarmingEpoch = stakingTime / farmingEpoch;
