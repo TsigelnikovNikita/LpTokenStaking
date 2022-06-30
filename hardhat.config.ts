@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, task } from "hardhat/config";
 
 import "@nomiclabs/hardhat-waffle";
 import "hardhat-gas-reporter"; // https://www.npmjs.com/package/hardhat-gas-reporter
@@ -8,6 +8,16 @@ import "@nomiclabs/hardhat-etherscan"; // https://www.npmjs.com/package/@nomicla
 import "hardhat-dependency-compiler"; // https://www.npmjs.com/package/hardhat-dependency-compiler
 import "solidity-coverage"; // https://www.npmjs.com/package/solidity-coverage
 import "hardhat-storage-layout"; // https://www.npmjs.com/package/hardhat-storage-layout
+
+// This is a sample Hardhat task. To learn how to create your own go to
+// https://hardhat.org/guides/create-task.html
+task("accounts", "Prints the list of accounts", async (args, hre) => {
+  const accounts = await hre.ethers.getSigners();
+
+  for (const account of accounts) {
+    console.log(account.address);
+  }
+});
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
