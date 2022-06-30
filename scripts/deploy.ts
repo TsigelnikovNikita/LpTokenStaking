@@ -14,6 +14,7 @@ async function main() {
 
     const contract = await contractFactory.deploy(LP_TOKEN_ADDRESS, REWARD_TOKEN_ADDRESS,
                                                                         farmingEpoch, rewardPerFarmingEpoch, lockEpoch);
+    console.log(`Transaction hash: ${contract.deployTransaction.hash}`);
     await contract.deployed();
     console.log(`${CONTRACT_NAME} deployed to: ${contract.address}`);
 }

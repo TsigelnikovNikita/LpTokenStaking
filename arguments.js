@@ -3,6 +3,9 @@
  * complex. Read more https://hardhat.org/plugins/nomiclabs-hardhat-etherscan#complex-arguments 
  */
 module.exports = [
-    "Arg1",
-    "Arg2"
+    process.env.LP_TOKEN_ADDRESS,
+    process.env.REWARD_TOKEN_ADDRESS,
+    process.env.FARMING_EPOCH,
+    process.env.REWARD_PER_FARMING_EPOCH,
+    process.env.LOCK_EPOCH,
   ];
