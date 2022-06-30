@@ -94,7 +94,9 @@ contract ERC20 {
      * Emit an {Transfer} event.
      */
     function transferFrom(address _from, address _to, uint256 _value) public virtual returns (bool success) {
-        allowances[_from][_to] -= _value;
+        require(allowances[_from][msg.sender] >= _value, "ERC20: insufficient allowance");
+
+        allowances[_from][msg.sender] -= _value;
         _transfer(_from, _to, _value);
         return true;
     }
@@ -115,6 +117,7 @@ contract ERC20 {
     function _transfer(address _from, address _to, uint256 _value) internal virtual {
         require(_from != address(0x0), "ERC20: from address can't be equal to zero");
         require(_to != address(0x0), "ERC20: to address can't be equal to zero");
+        require(_balances[_from] >= _value, "ERC20: insufficient balance");
 
         _balances[_from] -= _value;
         _balances[_to] += _value;
@@ -124,19 +127,30 @@ contract ERC20 {
 
     /**
      * @dev Creates `_amount` tokens and assigns them to `_account`, increasing the total supply.
+     *
+     * Emit an {Transfer} event.
      */
     function mint(address _account, uint256 _amount) public virtual onlyOwner {
         require(_account != address(0x0), "ERC20: address can't be equal to zero");
+
         _totalSupply += _amount;
         _balances[_account] += _amount;
+
+        emit Transfer(address(0x0), _account, _amount);
     }
 
     /**
      * @dev Destroys `_amount` tokens from `_account`, reducing the total supply.
+     *
+     * Emit an {Transfer} event.
      */
     function burn(address _account, uint256 _amount) public virtual onlyOwner {
         require(_account != address(0x0), "ERC20: address can't be equal to zero");
+        require(balanceOf(_account) >= _amount, "ERC20: insufficient balance");
+
         _totalSupply -= _amount;
-        _balances[_account] -= _amount;            
+        _balances[_account] -= _amount;
+
+        emit Transfer(_account, address(0x0), _amount);
     }
 }
